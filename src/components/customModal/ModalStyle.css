@@ -1,0 +1,43 @@
+.is-modal-container {
+    background-color: rgba(0,0,0,0.65);
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px
+}
+
+.is-modal-content {
+    padding: 10px;
+}
+
+.is-input-field {
+    color: white;
+    width: 100%;
+    padding: 10px 0;
+    margin: 5px 0;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    border-bottom: 1px solid white;
+    outline: none;
+    background: transparent;
+}
+
+.is-submit-btn {
+    color: white;
+    width: 85%;
+    padding: 10px 30px;
+    cursor: pointer;
+    display: block;
+    margin: 25px;
+    background: linear-gradient(to right, var(--color-pallete-blue), var(--color-pallete-blue));
+    border: 0;
+    outline: none;
+    border-radius: 30px;
+}
+
+.is-form-question {
+    color:white;
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}

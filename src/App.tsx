@@ -1,25 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Routes, Route } from "react-router-dom";
+import './assets/App.css';
+
+// Pages
+import FrontPage from './pages/FrontPage';
+
+// Components
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 function App() {
+  const [isModalVisible, setIsModalVisilble] = useState(false);
+  const [modalType, setModalType] = useState(0);
+
+  const closeModal = () => {
+    setIsModalVisilble(false);
+  }
+
+  const handleModal = (visible:boolean, type?: number) => {
+    setIsModalVisilble(visible);
+    if (typeof(type) === 'number') {
+      setModalType(type);
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path='/' element={<>
+        <Navbar openModal={handleModal} />
+        <FrontPage isModalVisible={isModalVisible} modalType={modalType} closeModal={closeModal} setModalType={setModalType} setIsModalVisilble={setIsModalVisilble}/>
+        <Footer/>
+        </>}/>
+      <Route path='/finance' element={<><Navbar openModal={handleModal} /></>}/>
+    </Routes>
   );
 }
 
