@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FaBars } from "react-icons/fa";
+import { useIsAuthenticated } from 'react-auth-kit';
 
 type NavbarProps = {
     openModal?: (visible:boolean, type?: number) => void,
+    username?: string | null;
 }
 
-const Navbar = ({openModal} : NavbarProps) => {
+const Navbar = ({openModal, username} : NavbarProps) => {
     const [dropBar, setDropbar] = useState(false); 
+    const isAuthenticated = useIsAuthenticated();
 
     const handleModal = () => {
         if (typeof(openModal) === 'function') {
@@ -27,7 +30,7 @@ const Navbar = ({openModal} : NavbarProps) => {
                 <NavLink to ='/' className={({isActive}) => isActive ? 'is-navbar-link active' : 'is-navbar-link'}> HOME </NavLink>
                 <NavLink to ='/finance' className={({isActive}) => isActive ? 'is-navbar-link active' : 'is-navbar-link'}> FINANCE </NavLink>
                 <NavLink to ='/todo' className={({isActive}) => isActive ? 'is-navbar-link active' : 'is-navbar-link'}> TO-DO </NavLink>
-                <div className='is-navbar-link' onClick={handleModal}> LOGIN </div>
+                {isAuthenticated() ? <div className='is-navbar-link'> HELLO {username?.toUpperCase()} </div> : <div className='is-navbar-link' onClick={handleModal}> LOGIN </div>}
             </div>
         </div>
     )

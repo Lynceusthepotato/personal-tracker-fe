@@ -3,6 +3,7 @@ import CustomButton from '../components/CustomButton'
 import CustomBox from '../components/CustomBox'
 import CustomUnderLine from '../components/CustomUnderLine'
 import Modal from '../components/customModal/Modal'
+import { login, register } from '../api/api'
 
 type FrontPageProps = {
   isModalVisible: boolean,
@@ -13,11 +14,8 @@ type FrontPageProps = {
 }
 
 const FrontPage = ({isModalVisible, modalType, closeModal, setModalType, setIsModalVisilble} : FrontPageProps) => {
-  // const [isModalVisible, setIsModalVisilble] = useState(false);
-  // const [modalType, setModalType] = useState<number | undefined>();
-  const [customFunction, setCustomFunction] = useState<() => void> ();
 
-  const handleModal = (visibility: boolean, type: number, customFunction?: () => void) => {
+  const handleModal = (visibility: boolean, type: number) => {
     setIsModalVisilble(visibility);
     setModalType(type);
   } 
@@ -29,7 +27,7 @@ const FrontPage = ({isModalVisible, modalType, closeModal, setModalType, setIsMo
 
   return (
     <div className='is-frontpage'>
-        <Modal isOpen={isModalVisible} onClose={closeModal} handleMultipleModal={handleModalChange} type={modalType} modalContentStyle={{width:'400px'}}/>
+        <Modal isOpen={isModalVisible} onClose={closeModal} handleMultipleModal={handleModalChange} type={modalType} modalContentStyle={{width:'400px'}} loginFunc={login} registerFunc={register}/>
         <div className='is-cover-container'>
           <div className='is-cover-text'>
               <div className='is-cover-title'>

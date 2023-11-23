@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './ModalStyle.css'
 import Header from '../Header';
+import { useSignIn } from 'react-auth-kit';
 
 type ModalProps = {
     modalOverlayStyle?: React.CSSProperties;
@@ -8,9 +9,11 @@ type ModalProps = {
     isOpen: boolean;
     onClose: () => void;
     handleMultipleModal?: (modalType: number) => void;
-    customFunc?: () => void;
+    loginFunc?: (loginCredential: {email: string, password:string}) => Promise<any>;
+    registerFunc?: (loginCredential: {username: string, email:string, password:string}) => Promise<any>;
     type?: number;
     children?: React.ReactNode;
+    setUsername?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const defaultModalOverlayStyle: React.CSSProperties = {
@@ -26,7 +29,7 @@ const defaultModalOverlayStyle: React.CSSProperties = {
     alignItems: 'center',
 }
 
-export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onClose, handleMultipleModal, customFunc, type = 0, children} : ModalProps) {
+export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onClose, handleMultipleModal, loginFunc, registerFunc,  type = 0, children, setUsername} : ModalProps) {
     const customModalOverlayStyle = {...defaultModalOverlayStyle, ...modalOverlayStyle};
 
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -36,9 +39,59 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
     }
 
     // Form details
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
+    const [loginData, setLoginData] = useState({email: '', password: ''});
+    const [registerData, setRegisterData] = useState({username: '', email: '', password: ''});
+
+    // Login
+    const signIn = useSignIn();
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            if (typeof(loginFunc) !== 'undefined') {
+                const response = await loginFunc(loginData);
+                if (response.data) {
+                    signIn({
+                        token: response.data.token,
+                        expiresIn: 120,
+                        tokenType: "Bearer",
+                        authState: { username: response.data.username, email: loginData.email }
+                    });
+                    if (typeof(setUsername) !== 'undefined') {
+                        setUsername(response.data.username);
+                    }
+                } else {
+                    console.error(response);
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // Register
+    const handleRegister = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            if (typeof(registerFunc) !== 'undefined') {
+                const response = await registerFunc(registerData);
+                if (response.data) {
+                    signIn({
+                        token: response.data.token,
+                        expiresIn: 120,
+                        tokenType: "Bearer",
+                        authState: { username: response.data.username, email: loginData.email }
+                    })
+                    if (typeof(setUsername) !== 'undefined') {
+                        setUsername(response.data.username);
+                    }
+                } else {
+                    console.error(response);
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     const customModalContent = () => {
         switch (type) {
@@ -46,9 +99,9 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                 return (
                     <div className='is-form-box'>
                         <Header style={{color:'white', paddingBottom:'20px'}}> Login </Header>
-                        <form id='is-login-form' onSubmit={customFunc}>
-                        <input type="text" className="is-input-field" placeholder= "Email" name="Email" value={username} onChange={(e) => setUsername(e.target.value)} />
-                        <input type="text" className="is-input-field" placeholder= "Password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <form id='is-login-form' onSubmit={handleLogin}>
+                        <input type="text" className="is-input-field" placeholder= "Email" name="Email" value={loginData.email} onChange={(e) => setLoginData({...loginData, email: e.target.value})} />
+                        <input type="text" className="is-input-field" placeholder= "Password" name="password" value={loginData.password} onChange={(e) => setLoginData({...loginData, password: e.target.value})} />
                         <input type="submit" className="is-submit-btn" id="login" value= "Login"/>  
                         </form>
                         <div className='is-form-question'> Don`t have an account yet? {handleMultipleModal && <p onClick={() => handleMultipleModal(2)} style={{fontWeight:'700', color:'white'}}> Register </p> }</div>
@@ -58,11 +111,11 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                 return (
                     <div className='is-form-box'>
                         <Header style={{color:'white', paddingBottom:'20px'}}> Register </Header>
-                        <form id='is-login-form' onSubmit={customFunc}>
-                        <input type="text" className="is-input-field" placeholder= "Email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <form id='is-login-form' onSubmit={handleRegister}>
+                        <input type="text" className="is-input-field" placeholder= "Email" name="email" value={registerData.email} onChange={(e) => setRegisterData({...registerData, email: e.target.value})} />
 
-                        <input type="text" className="is-input-field" placeholder= "Username" name="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-                        <input type="text" className="is-input-field" placeholder= "Password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <input type="text" className="is-input-field" placeholder= "Username" name="Username" value={registerData.username} onChange={(e) => setRegisterData({...registerData, username: e.target.value})} />
+                        <input type="text" className="is-input-field" placeholder= "Password" name="password" value={registerData.password} onChange={(e) => setRegisterData({...registerData, password: e.target.value})} />
                         <input type="submit" className="is-submit-btn" id="register" value= "Register"/>
                         </form>
                         <div className='is-form-question'> Already have an account? {handleMultipleModal && <p onClick={() => handleMultipleModal(1)} style={{fontWeight:'700', color:'white'}}> Login </p> }</div>

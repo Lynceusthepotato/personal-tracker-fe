@@ -3,9 +3,10 @@
   --color-pallete-orange: rgb(236, 164, 0);
 }
 
-html {
+html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
   background: rgb(240, 240, 240);
   color: black;
 }
@@ -79,7 +80,7 @@ p {
 .is-cover-container {
   position: relative;
   background: rgb(225, 225, 225);
-  min-height: 50vh;
+  min-height: 60vh;
   display: grid;
   align-items: end;
 }
