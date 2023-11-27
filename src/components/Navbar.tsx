@@ -4,33 +4,27 @@ import { FaBars } from "react-icons/fa";
 import { useIsAuthenticated } from 'react-auth-kit';
 
 type NavbarProps = {
-    openModal?: (visible:boolean, type?: number) => void,
+    showModal: (visible:boolean, type?: number) => void;
     username?: string | null;
 }
 
-const Navbar = ({openModal, username} : NavbarProps) => {
+const Navbar = ({showModal, username} : NavbarProps) => {
     const [dropBar, setDropbar] = useState(false); 
     const isAuthenticated = useIsAuthenticated();
 
-    const handleModal = () => {
-        if (typeof(openModal) === 'function') {
-            openModal(true, 1);
-        }
-    }
-
     return (
         <div className='is-navbar'>
-            <div className='left'>
+            <NavLink to='/' className='left'>
                 PERSONAL TRACKER
-            </div>
+            </NavLink>
             <div className='right'>
                 <div className='is-navbar-mobile'>
                     <FaBars onClick={() => setDropbar(!dropBar)} />
                 </div>
-                <NavLink to ='/' className={({isActive}) => isActive ? 'is-navbar-link active' : 'is-navbar-link'}> HOME </NavLink>
+                <NavLink to ='/home' className={({isActive}) => isActive ? 'is-navbar-link active' : 'is-navbar-link'}> HOME </NavLink>
                 <NavLink to ='/finance' className={({isActive}) => isActive ? 'is-navbar-link active' : 'is-navbar-link'}> FINANCE </NavLink>
                 <NavLink to ='/todo' className={({isActive}) => isActive ? 'is-navbar-link active' : 'is-navbar-link'}> TO-DO </NavLink>
-                {isAuthenticated() ? <div className='is-navbar-link'> HELLO {username?.toUpperCase()} </div> : <div className='is-navbar-link' onClick={handleModal}> LOGIN </div>}
+                {isAuthenticated() ? <div className='is-navbar-link' onClick={() => showModal(true, 3)}> HELLO {username?.toUpperCase()} </div> : <div className='is-navbar-link' onClick={() => showModal(true, 1)}> LOGIN </div>}
             </div>
         </div>
     )

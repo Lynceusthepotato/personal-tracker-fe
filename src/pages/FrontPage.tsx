@@ -1,33 +1,15 @@
-import React, { useState } from 'react'
 import CustomButton from '../components/CustomButton'
 import CustomBox from '../components/CustomBox'
 import CustomUnderLine from '../components/CustomUnderLine'
-import Modal from '../components/customModal/Modal'
-import { login, register } from '../api/api'
 
 type FrontPageProps = {
-  isModalVisible: boolean,
-  modalType: number,
-  closeModal: () => void,
-  setModalType: React.Dispatch<React.SetStateAction<number>>;
-  setIsModalVisilble: React.Dispatch<React.SetStateAction<boolean>>;
+  showModal: (visible: boolean, type: number) => void;
 }
 
-const FrontPage = ({isModalVisible, modalType, closeModal, setModalType, setIsModalVisilble} : FrontPageProps) => {
-
-  const handleModal = (visibility: boolean, type: number) => {
-    setIsModalVisilble(visibility);
-    setModalType(type);
-  } 
-
-  const handleModalChange = (type: number) => {
-    setIsModalVisilble(!isModalVisible);
-    handleModal(true, type);
-  }
+const FrontPage = ({showModal} : FrontPageProps) => {
 
   return (
     <div className='is-frontpage'>
-        <Modal isOpen={isModalVisible} onClose={closeModal} handleMultipleModal={handleModalChange} type={modalType} modalContentStyle={{width:'400px'}} loginFunc={login} registerFunc={register}/>
         <div className='is-cover-container'>
           <div className='is-cover-text'>
               <div className='is-cover-title'>
@@ -39,7 +21,7 @@ const FrontPage = ({isModalVisible, modalType, closeModal, setModalType, setIsMo
             </div>
             <div className='is-button-container'>
                 <CustomButton> LEARN MORE </CustomButton>
-                <CustomButton onClick={() => handleModal(true, 1)}> JOIN NOW </CustomButton>
+                <CustomButton onClick={() => showModal(true, 1)}> JOIN NOW </CustomButton>
             </div>
         </div>
         <CustomUnderLine />

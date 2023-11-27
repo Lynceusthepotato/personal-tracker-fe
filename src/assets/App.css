@@ -1,13 +1,15 @@
 :root {
   --color-pallete-blue: rgb(62, 105, 144);
   --color-pallete-orange: rgb(236, 164, 0);
+  --color-pallete-lightGray: rgb(225, 225, 225);
+  --color-pallete-white: rgb(240, 240, 240);
 }
 
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: rgb(240, 240, 240);
+  background: var(--color-pallete-white);
   color: black;
 }
 
@@ -26,6 +28,8 @@ p {
   align-items: center;
   margin-left: 5%;
   padding: 15px;
+  text-decoration: none;
+  color: black;
 }
 
 .is-navbar-link {
@@ -79,7 +83,7 @@ p {
 /* Frontpage */
 .is-cover-container {
   position: relative;
-  background: rgb(225, 225, 225);
+  background: var(--color-pallete-lightGray);
   min-height: 60vh;
   display: grid;
   align-items: end;
@@ -118,6 +122,45 @@ p {
   padding: 5%;
   align-items: center;
   flex-direction: column;
+}
+
+/* homepage */
+.is-homepage-container {
+  background-color: var(--color-pallete-lightGray);
+}
+
+.is-homepage-cover {
+  display: grid;
+  grid-template-columns: 0.55fr 0.45fr;
+}
+
+.is-tracker-container {
+  background-color: var(--color-pallete-white);
+  border-radius: 10px;
+  min-height: 50vh;
+  margin: 15px;
+}
+
+.is-tracker-title {
+  display: grid;
+  grid-template-columns: 0.8fr 0.2fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.is-finance-content {
+  display: grid;
+  grid-template-rows: 0.4fr 0.4fr 0.2fr;
+  margin: 15px;
+}
+
+.is-finance-information-container {
+  background-color: var(--color-pallete-blue);
+  border-radius: 20px;
+  display: grid;
+  justify-items: start;
+  padding: 20px;
+  margin: 10px;
 }
 
 @media screen and (min-width: 768px) {

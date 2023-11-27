@@ -2,7 +2,7 @@ import React from 'react'
 
 type HeaderProps = {
     style?: React.CSSProperties;
-    children: string;
+    children?: string | number;
 }
 
 const defaultHeaderStyle: React.CSSProperties = {
