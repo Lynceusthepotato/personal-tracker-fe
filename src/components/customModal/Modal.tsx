@@ -4,7 +4,7 @@ import Header from '../Header';
 import { useSignIn, useSignOut } from 'react-auth-kit';
 import CustomButton from '../CustomButton';
 import { useNavigate } from 'react-router-dom';
-import { login, register, createFinance, updateFinance } from '../../api/api';
+import { login, register, createFinance, updateFinance, createTransaction, updateTransaction } from '../../api/api';
 
 type ModalProps = {
     modalOverlayStyle?: React.CSSProperties;
@@ -45,7 +45,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
     const [loginData, setLoginData] = useState({email: '', password: ''});
     const [registerData, setRegisterData] = useState({username: '', email: '', password: ''});
     const [financeData, setFinanceData] = useState({finance_budget: 0, finance_monthly_budget: 0, do_warn: true});
-
+    const [transactionData, setTransactionData] = useState({transaction_id: 0, transaction_numeral: 0, transaction_name: '', transaction_description: '', transaction_date: new Date(), category_id: 0, category_name:''});
 
     // Login
     const signIn = useSignIn();
@@ -161,6 +161,61 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
         }
     }
 
+    // Transaction
+    const handleCreateTransaction = async(e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            if (typeof (createTransaction) !== 'undefined') {
+                const response = await createTransaction(transactionData);
+                if (response.data) {
+                    console.log(response.data);
+                } else {
+                    console.log(response);
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const handleUpdateTransaction = async(e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            if (typeof (updateTransaction) !== 'undefined') {
+                const response = await updateTransaction(transactionData);
+                if (response.data) {
+                    console.log(response.data);
+                } else {
+                    console.log(response);
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const handleTransactionSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            switch (functionType) {
+                case 0:
+                    await handleCreateTransaction(e);
+                    break;
+                case 1:
+                    await handleUpdateTransaction(e);
+                    break;
+                default:
+                    break;
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    
+    const handleCurrencyInput = (input: HTMLInputElement) => {
+        input.value = new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'}).format(parseFloat(input.value));
+    }
+
     const customModalContent = () => {
         switch (type) {
             case 1: // Login form
@@ -203,18 +258,27 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                             {functionType === 1 && 
                             <div className='is-finance-budget'>
                                 <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)', fontWeight:'300'}}> Current Budget: </Header>
-                                <input type="number" className="is-input-field" placeholder= "Current Finance Budget" name="finance_budget" value={financeData.finance_budget} onChange={(e) => setFinanceData({...financeData, finance_budget: Number(e.target.value)})} />
+                                <input type="number" onInput={(e) => handleCurrencyInput} className="is-input-field" placeholder= "Current Finance Budget" name="finance_budget" value={financeData.finance_budget} onChange={(e) => setFinanceData({...financeData, finance_budget: Number(e.target.value)})} />
                             </div>
                             }
                             <div className='is-finance-budget'>
                                 <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)', fontWeight:'300'}}> Monthly Budget: </Header>
-                                <input type="number" className="is-input-field" placeholder= "Monthly Budget" name="monthlyBudget" value={financeData.finance_monthly_budget} onChange={(e) => setFinanceData({...financeData, finance_monthly_budget: Number(e.target.value)})} />
+                                <input type="number" onInput={(e) => handleCurrencyInput} className="is-input-field" placeholder= "Monthly Budget" name="monthlyBudget" value={financeData.finance_monthly_budget} onChange={(e) => setFinanceData({...financeData, finance_monthly_budget: Number(e.target.value)})} />
                             </div>
                             <div className='is-finance-warn'>
                                 <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)'}}> Warn me ?</Header>
                                 <input type="checkbox" className="is-input-field" placeholder= "Warn me?" name="do_warn" checked={financeData.do_warn} onChange={(e) => setFinanceData({...financeData, do_warn: Boolean(e.target.checked)})} />
                             </div>
                             <input type="submit" className="is-submit-btn" id="finance" value= {functionType === 0 ? "Create" : functionType === 1 ? "Update" : ""}/>
+                        </form>
+                    </div>
+                )
+            case 5:
+                return (
+                    <div className='is-form-box'>
+                        <Header style={{color:'white', paddingBottom:'20px'}}> Finance Tracker </Header>
+                        <form id='is-transaction-form' onSubmit={handleTransactionSubmit}>
+                            
                         </form>
                     </div>
                 )

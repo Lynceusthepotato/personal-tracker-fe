@@ -127,6 +127,8 @@ p {
 /* homepage */
 .is-homepage-container {
   background-color: var(--color-pallete-lightGray);
+  min-height: 90vh;
+  display: grid;
 }
 
 .is-homepage-cover {
@@ -152,6 +154,7 @@ p {
   display: grid;
   grid-template-rows: 0.4fr 0.4fr 0.2fr;
   margin: 15px;
+  align-content: space-between;
 }
 
 .is-finance-information-container {
@@ -161,6 +164,59 @@ p {
   justify-items: start;
   padding: 20px;
   margin: 10px;
+}
+
+.is-finance-budget-cover {
+  display: grid;
+  grid-template-columns: 0.8fr 0.2fr;
+  align-items: center;
+  width: 100%;
+  justify-items: start;
+  color: var(--color-pallete-white);
+}
+
+.is-finance-transaction {
+  height: 30vh;
+  margin: 10px;
+}
+
+.is-homepage-filler {
+  display: grid;
+  background-color: var(--color-pallete-white);
+  min-height: 20vh;
+  align-items: center;
+  margin: 15px;
+  border-radius: 20px;
+}
+
+/* finance */
+.is-month-history {
+  display: grid;
+  padding: 15px;
+  margin: 0 10px;
+  background-color: var(--color-pallete-white);
+  border-radius: 10px;
+}
+
+.is-finance-taskbar {
+  display: grid;
+  grid-template-columns: .45fr .20fr .20fr .05fr .05fr .05fr;
+  background: var(--color-pallete-white);
+  border-radius: 10px;
+  margin: 10px;
+  padding: 10px;
+  align-items: center;
+  justify-content: end;
+  justify-items: center;
+}
+
+.is-finance-taskbar-pattern {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-pallete-white);
+  background-image: radial-gradient(rgba(12, 12, 12, 0.171) 2px, transparent 0);
+  background-size: 25px 25px;
+  background-position: -5px -5px;
 }
 
 @media screen and (min-width: 768px) {

@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 type HeaderProps = {
     style?: React.CSSProperties;
-    children?: string | number;
+    children?: ReactNode;
 }
 
 const defaultHeaderStyle: React.CSSProperties = {

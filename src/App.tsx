@@ -66,7 +66,7 @@ function App() {
         />
         <Route path='/finance' element={
           <CustomPrivateRoute>
-            <FinancePage/>
+            <FinancePage showModal={handleModal}/>
           </CustomPrivateRoute>
           } 
         />

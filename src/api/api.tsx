@@ -14,6 +14,11 @@ export const getFinanceEndpoint = 'finance/find';
 export const createFinanceEndpoint = 'finance/create';
 export const updateFinanceEndpoint = 'finance/update';
 
+// transaction
+export const getAllTransactionEndpoint = 'transaction/all';
+export const createTransactionEndpoint = 'transaction/create';
+export const updateTransactionEndpoint = 'transaction/update';
+
 // Cookie
 function getCookie(name:string) {
     const cookieString = document.cookie;
@@ -104,4 +109,42 @@ export const updateFinance = async ({finance_budget, finance_monthly_budget, do_
     const data = new URLSearchParams({finance_budget: String(finance_budget), finance_monthly_budget: String(finance_monthly_budget), do_warn: String(do_warn)}).toString();
 
     return api.put(updateFinanceEndpoint, data, config);
+}
+
+type transactionData = {
+    transaction_id?: number;
+    transaction_numeral: number;
+    transaction_name: string;
+    transaction_description: string;
+    transaction_date: Date;
+    category_id?: number;
+    category_name?: string;
+}
+
+export const createTransaction = async ({transaction_numeral, transaction_name, transaction_description, transaction_date, category_id}: transactionData) => {
+    const config: AxiosRequestConfig = {
+        headers: {
+            Authorization: getCookie('_auth'),
+            'content-type': 'application/x-www-form-urlencoded',
+        }
+    };
+
+    const data = new URLSearchParams({transaction_numeral: String(transaction_numeral), transaction_name, transaction_description, transaction_date: String(transaction_date), category_id: String(category_id)}).toString();
+
+    return api.post(createTransactionEndpoint, data, config);
+}
+
+export const updateTransaction = async ({transaction_id, transaction_numeral, transaction_name, transaction_description, transaction_date, category_id}: transactionData) => {
+    const config: AxiosRequestConfig = {
+        headers: {
+            Authorization: getCookie('_auth'),
+            'content-type': 'application/x-www-form-urlencoded',
+        }
+    };
+
+    const formattedDate = transaction_date.toISOString().slice(0, 19).replace('T', ' ');
+
+    const data = new URLSearchParams({transaction_id: String(transaction_id), transaction_numeral: String(transaction_numeral), transaction_name, transaction_description, transaction_date: formattedDate, category_id: String(category_id)}).toString();
+
+    return api.post(updateTransactionEndpoint, data, config);
 }
