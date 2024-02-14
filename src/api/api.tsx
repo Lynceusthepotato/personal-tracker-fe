@@ -116,7 +116,7 @@ type transactionData = {
     transaction_numeral: number;
     transaction_name: string;
     transaction_description: string;
-    transaction_date: Date;
+    transaction_date: string;
     category_id?: number;
     category_name?: string;
 }
@@ -142,7 +142,7 @@ export const updateTransaction = async ({transaction_id, transaction_numeral, tr
         }
     };
 
-    const formattedDate = transaction_date.toISOString().slice(0, 19).replace('T', ' ');
+    const formattedDate = transaction_date.slice(0, 19).replace('T', ' '); // transaction_date.toISOString().slice(0, 19).replace('T', ' ');
 
     const data = new URLSearchParams({transaction_id: String(transaction_id), transaction_numeral: String(transaction_numeral), transaction_name, transaction_description, transaction_date: formattedDate, category_id: String(category_id)}).toString();
 

@@ -5,6 +5,10 @@ import { useSignIn, useSignOut } from 'react-auth-kit';
 import CustomButton from '../CustomButton';
 import { useNavigate } from 'react-router-dom';
 import { login, register, createFinance, updateFinance, createTransaction, updateTransaction } from '../../api/api';
+import { useUserData } from '../../contexts/UserDataContext';
+import DateTime from 'react-datetime';
+import "react-datetime/css/react-datetime.css";
+import moment from 'moment';
 
 type ModalProps = {
     modalOverlayStyle?: React.CSSProperties;
@@ -35,6 +39,8 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
     const customModalOverlayStyle = {...defaultModalOverlayStyle, ...modalOverlayStyle};
     const navigate = useNavigate();
 
+    const { userData, setUserData } = useUserData();
+
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
             onClose();
@@ -45,7 +51,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
     const [loginData, setLoginData] = useState({email: '', password: ''});
     const [registerData, setRegisterData] = useState({username: '', email: '', password: ''});
     const [financeData, setFinanceData] = useState({finance_budget: 0, finance_monthly_budget: 0, do_warn: true});
-    const [transactionData, setTransactionData] = useState({transaction_id: 0, transaction_numeral: 0, transaction_name: '', transaction_description: '', transaction_date: new Date(), category_id: 0, category_name:''});
+    const [transactionData, setTransactionData] = useState({transaction_id: 0, transaction_numeral: 0, transaction_name: '', transaction_description: '', transaction_date: '', category_id: 0, category_name:''});
 
     // Login
     const signIn = useSignIn();
@@ -112,7 +118,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
 
     // Finance
     const handleCreateFinance = async (e: React.FormEvent) => {
-        e.preventDefault();
+        // e.preventDefault();
         try {
             if (typeof (createFinance) !== 'undefined') {
                 const response = await createFinance(financeData);
@@ -133,7 +139,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
             if (typeof (updateFinance) !== 'undefined') {
                 const response = await updateFinance(financeData);
                 if (response.data) {
-                    console.log(response.data);
+                    setUserData({finance: response.data});
                 } else {
                     console.log(response);
                 }
@@ -216,6 +222,13 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
         input.value = new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'}).format(parseFloat(input.value));
     }
 
+    const handleDateChange = (selectedDate: moment.Moment | String) => {
+        if (moment.isMoment(selectedDate)) {
+            setTransactionData({...transactionData, transaction_date: selectedDate.format("yyyy-MM-DD HH:mm:ss")});
+            console.log(selectedDate.format("yyyy-MM-DD HH:mm:ss"));
+        }
+    }
+
     const customModalContent = () => {
         switch (type) {
             case 1: // Login form
@@ -278,7 +291,10 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                     <div className='is-form-box'>
                         <Header style={{color:'white', paddingBottom:'20px'}}> Finance Tracker </Header>
                         <form id='is-transaction-form' onSubmit={handleTransactionSubmit}>
-                            
+                            <DateTime
+                            onChange={handleDateChange}
+                            input = {false}
+                            />
                         </form>
                     </div>
                 )

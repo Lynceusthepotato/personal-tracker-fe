@@ -15,6 +15,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CustomPrivateRoute from './components/CustomPrivateRoute';
 import Modal from './components/customModal/Modal';
+import UserDataProvider from './contexts/UserDataContext';
 
 function App() {
   const [isModalVisible, setIsModalVisilble] = useState(false);
@@ -50,29 +51,31 @@ function App() {
   },[authUser()]);
 
   return (
-    <>
-      <Navbar showModal={handleModal} username={username}/>
-      <Modal isOpen={isModalVisible} onClose={closeModal} handleMultipleModal={handleModalChange} type={modalType} modalContentStyle={{width:'400px'}} functionType={modalFuncType}/>
-      <Routes>
-        <Route path='/' element={<>
-          <FrontPage showModal={handleModal}/>
-          </>}
-        />
-        <Route path='/home' element={
-          <CustomPrivateRoute>
-            <Homepage showModal={handleModal}/>
-          </CustomPrivateRoute>
-          } 
-        />
-        <Route path='/finance' element={
-          <CustomPrivateRoute>
-            <FinancePage showModal={handleModal}/>
-          </CustomPrivateRoute>
-          } 
-        />
-      </Routes>
-      <Footer/>
-    </>
+    <UserDataProvider>
+      <>
+        <Navbar showModal={handleModal} username={username}/>
+        <Modal isOpen={isModalVisible} onClose={closeModal} handleMultipleModal={handleModalChange} type={modalType} modalContentStyle={{width:'400px'}} functionType={modalFuncType}/>
+        <Routes>
+          <Route path='/' element={<>
+            <FrontPage showModal={handleModal}/>
+            </>}
+          />
+          <Route path='/home' element={
+            <CustomPrivateRoute>
+              <Homepage showModal={handleModal}/>
+            </CustomPrivateRoute>
+            } 
+          />
+          <Route path='/finance' element={
+            <CustomPrivateRoute>
+              <FinancePage showModal={handleModal}/>
+            </CustomPrivateRoute>
+            } 
+          />
+        </Routes>
+        <Footer/>
+      </>
+    </UserDataProvider>
   );
 }
 

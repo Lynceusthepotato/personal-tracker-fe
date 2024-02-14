@@ -1,35 +1,23 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { getAllFinance } from "../api/api";
 import CustomButton from "../components/CustomButton";
 import Header from "../components/Header";
 import { FaPencil } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { useUserData } from "../contexts/UserDataContext";
 
 type HomepageProps = {
     showModal: (visible: boolean, type: number, functionType: number) => void;
 }
 
-type financeDataProps = {
-    finance_id: number;
-    finance_budget: number;
-    finance_monthly_budget: number;
-    do_warn: boolean
-}
-
 const Homepage = ({showModal}: HomepageProps) => {
-    const [financeData, setFinanceData] = useState<financeDataProps>()
+    const { userData, setUserData } = useUserData();
 
     const getFinanceInfo = async () => {
         try {
             const response = await getAllFinance();
             if (response.data) {
-                console.log(response.data);
-                setFinanceData({
-                    finance_id: response.data.financeId,
-                    finance_budget: response.data.financeBudget,
-                    finance_monthly_budget: response.data.financeMonthlyBudget,
-                    do_warn: response.data.doWarn
-                })
+                setUserData({finance: response.data});
             } else {
                 console.log(response);
             }
@@ -38,20 +26,20 @@ const Homepage = ({showModal}: HomepageProps) => {
         }
     }
 
+    const isMounted = useRef(true);
     useEffect(() => {
-        getFinanceInfo();
-    },[]); 
+        if (isMounted.current) {
+            getFinanceInfo();
+            isMounted.current = false;
+        }
+        if (userData?.finance) {
+            console.log(userData.finance);
+        }
+    }, [userData]); 
 
-    const renderFinanceInformation = () => {
-       
-    }
-
-    useEffect(() => {
-        renderFinanceInformation();
-    }, [financeData])
-
+    // Get 5 recent transaction below
     const handleFinanceFunction = () => {
-        if (financeData) {
+        if (userData?.finance) {
             showModal(true, 4, 1);
         } else {
             showModal(true, 4, 0);
@@ -84,8 +72,8 @@ const Homepage = ({showModal}: HomepageProps) => {
                                 <Header style={{fontSize:'0.8', fontWeight:'400', color:'var(--color-pallete-white)'}}> Budget </Header>
                                 <FaPencil onClick={handleFinanceFunction}/>
                             </div>
-                            {financeData ? 
-                            (<Header style={{color:'var(--color-pallete-white)'}}>{financeData.finance_budget}</Header>) 
+                            {userData?.finance ? 
+                            (<Header style={{color:'var(--color-pallete-white)'}}>{userData.finance.financeBudget}</Header>) 
                             : 
                             (<Header style={{color:'var(--color-pallete-white)'}}>?</Header>)}
                         </div>

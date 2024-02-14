@@ -200,7 +200,7 @@ p {
 
 .is-finance-taskbar {
   display: grid;
-  grid-template-columns: .45fr .20fr .20fr .05fr .05fr .05fr;
+  grid-template-columns: .45fr .20fr .20fr .03fr .01fr .01fr;
   background: var(--color-pallete-white);
   border-radius: 10px;
   margin: 10px;
