@@ -1,4 +1,5 @@
 import axios, {AxiosRequestConfig} from 'axios';
+import dayjs from 'dayjs';
 
 const api = axios.create({
     baseURL: 'http://localhost:6060/api/', // port that is used for backend
@@ -18,6 +19,10 @@ export const updateFinanceEndpoint = 'finance/update';
 export const getAllTransactionEndpoint = 'transaction/all';
 export const createTransactionEndpoint = 'transaction/create';
 export const updateTransactionEndpoint = 'transaction/update';
+export const deleteTransactionEndpoint = 'transaction/delete';
+
+// category
+export const getAllCategoryEndpoint = 'transaction_category/all';
 
 // Cookie
 function getCookie(name:string) {
@@ -116,9 +121,12 @@ type transactionData = {
     transaction_numeral: number;
     transaction_name: string;
     transaction_description: string;
-    transaction_date: string;
+    transaction_date: dayjs.Dayjs;
     category_id?: number;
-    category_name?: string;
+}
+
+export const getAllTransactionCategory = async () => {
+    return api.get(getAllCategoryEndpoint);
 }
 
 export const createTransaction = async ({transaction_numeral, transaction_name, transaction_description, transaction_date, category_id}: transactionData) => {
@@ -129,7 +137,9 @@ export const createTransaction = async ({transaction_numeral, transaction_name, 
         }
     };
 
-    const data = new URLSearchParams({transaction_numeral: String(transaction_numeral), transaction_name, transaction_description, transaction_date: String(transaction_date), category_id: String(category_id)}).toString();
+    const formattedDate = transaction_date.format('YYYY-MM-DD HH:mm:ss').toString();
+
+    const data = new URLSearchParams({transaction_numeral: String(transaction_numeral), transaction_name, transaction_description, transaction_date: formattedDate, category_id: String(category_id)}).toString();
 
     return api.post(createTransactionEndpoint, data, config);
 }
@@ -142,9 +152,20 @@ export const updateTransaction = async ({transaction_id, transaction_numeral, tr
         }
     };
 
-    const formattedDate = transaction_date.slice(0, 19).replace('T', ' '); // transaction_date.toISOString().slice(0, 19).replace('T', ' ');
+    const formattedDate = transaction_date.format('YYYY-MM-DD HH:mm:ss').toString();
 
     const data = new URLSearchParams({transaction_id: String(transaction_id), transaction_numeral: String(transaction_numeral), transaction_name, transaction_description, transaction_date: formattedDate, category_id: String(category_id)}).toString();
 
     return api.post(updateTransactionEndpoint, data, config);
+}
+
+export const deleteTransaction = async(transaction_id: number) => {
+    const config: AxiosRequestConfig = {
+        headers: {
+            Authorization: getCookie('_auth'),
+            'content-type': 'application/x-www-form-urlencoded',
+        }
+    };
+    console.log(transaction_id);
+    return api.delete(`${deleteTransactionEndpoint}/${transaction_id}`, config);
 }

@@ -54,3 +54,60 @@
     grid-template-columns: 0.8fr 0.2fr;
     justify-items: start;
 }
+
+/* transaction */
+.is-transaction-num {
+    display: grid;
+    grid-template-columns: .4fr .6fr;
+    padding: 10px;
+    justify-items: start;
+    align-items: center;
+}
+
+.is-transactional-type {
+    & .MuiInputBase-root {
+        color: var(--color-pallete-white);
+        border-bottom: 2px solid var(--color-pallete-white);
+        width: 100%;
+    }
+}
+
+.is-transaction-desc {
+    display: grid;
+    padding: 10px;
+}
+
+.is-numeral-format {
+    background: transparent;
+    border-bottom: 2px solid var(--color-pallete-white);
+    color: var(--color-pallete-white);
+}
+
+.is-transaction-date {
+    display: flex;
+    padding: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.is-datetime {
+    & .MuiInputBase-root {
+        color: var(--color-pallete-white);
+        border-bottom: 2px solid var(--color-pallete-white);
+    }
+    & .MuiSvgIcon-root {
+        fill: var(--color-pallete-white)
+    }
+}
+
+.is-textfield {
+    & .MuiInputBase-root {
+        color: var(--color-pallete-white);
+        border-bottom: 2px solid var(--color-pallete-white);
+        font-size: 0.8em;
+    }
+    &.MuiFormControl-root {
+        width: 100%;
+    }
+}

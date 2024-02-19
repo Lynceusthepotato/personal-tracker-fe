@@ -6,6 +6,10 @@ type TransactionProps = {
     transactionName: string;
     transactionDescription: string;
     transactionDate: Date;
+    transactionCategory?: CategoryProps[];
+}
+
+type CategoryProps = {
     categoryId?: number;
     categoryName?: string;
 }
@@ -15,7 +19,7 @@ type FinanceProps = {
     financeBudget: number;
     financeMonthlyBudget: number;
     doWarn: boolean
-    transactionList?: TransactionProps[];
+    transaction?: TransactionProps[];
 }
 
 type UserInformationProps = {
@@ -27,6 +31,7 @@ type UserInformationProps = {
 type UserDataProps = {
     user?: UserInformationProps;
     finance?: FinanceProps;
+    category?: CategoryProps[];
 }
 
 type UserDataContextType = {

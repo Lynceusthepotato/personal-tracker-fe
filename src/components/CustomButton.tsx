@@ -4,10 +4,10 @@ type ButtonProps = {
     style?: React.CSSProperties;
     onClick?: () => void;
     children: React.ReactNode;
+    customClassName?: string;
 }
 
 const defaultButtonStyle: React.CSSProperties = {
-    display: 'grid',
     background: 'rgb(0, 0, 0)',
     color: 'white',
     borderRadius: '20px',
@@ -15,11 +15,12 @@ const defaultButtonStyle: React.CSSProperties = {
     margin: '10px',
     border: '2px solid black',
     justifyItems: 'center',
+    textAlign: 'center',
     cursor:'pointer',
     transition: 'all 0.08s ease',
 }
 
-export default function CustomButton ({style, onClick, children} : ButtonProps) {
+export default function CustomButton ({style, onClick, children, customClassName} : ButtonProps) {
     const buttonStyle: React.CSSProperties = { ...defaultButtonStyle, ...style };
-    return <div onClick={onClick} style={buttonStyle} > {children} </div>
+    return <div onClick={onClick} style={buttonStyle} className={customClassName}> {children} </div>
 }

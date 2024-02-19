@@ -134,6 +134,7 @@ p {
 .is-homepage-cover {
   display: grid;
   grid-template-columns: 0.55fr 0.45fr;
+  justify-content: space-around;
 }
 
 .is-tracker-container {
@@ -141,6 +142,7 @@ p {
   border-radius: 10px;
   min-height: 50vh;
   margin: 15px;
+  min-width: 50%;
 }
 
 .is-tracker-title {
@@ -152,7 +154,7 @@ p {
 
 .is-finance-content {
   display: grid;
-  grid-template-rows: 0.4fr 0.4fr 0.2fr;
+  grid-template-rows: 0.3fr 0.5fr 0.2fr;
   margin: 15px;
   align-content: space-between;
 }
@@ -176,7 +178,9 @@ p {
 }
 
 .is-finance-transaction {
-  height: 30vh;
+  height: 100%;
+  display: grid;
+  gap: 10px;
   margin: 10px;
 }
 
@@ -189,6 +193,63 @@ p {
   border-radius: 20px;
 }
 
+.is-transaction-card-container-container {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.is-transaction-card-container-container.active{
+  display: grid;
+  grid-template-columns: .1fr .9fr;
+}
+
+.is-transaction-card-container {
+  display: grid;
+  background-color: beige;
+  padding: 10px;
+  border-radius: 15px;
+  border: 2px solid;
+}
+
+.is-transaction-card {
+  display: grid;
+  grid-template-columns: 0.8fr 0.2fr;
+  justify-items: center;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.is-month-transaction-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.is-month-transaction-container.active {
+  grid-template-columns: 1fr 1fr;
+}
+
+.is-remove-button {
+  display: none;
+}
+
+.is-remove-button.active {
+  display: grid;
+}
+
+.is-transaction-checkbox {
+  &.MuiButtonBase-root {
+    display: none;
+  }
+}
+
+.is-transaction-checkbox.active{
+  &.MuiButtonBase-root {
+    display: -webkit-inline-box;
+  }
+}
+
 /* finance */
 .is-month-history {
   display: grid;
@@ -196,6 +257,7 @@ p {
   margin: 0 10px;
   background-color: var(--color-pallete-white);
   border-radius: 10px;
+  grid-gap: 10px;
 }
 
 .is-finance-taskbar {
