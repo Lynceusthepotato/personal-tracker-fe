@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from "react"
 
-type TransactionProps = {
+export type TransactionProps = {
     transactionId?: number;
     transactionNumeral: number;
     transactionName: string;
@@ -9,12 +9,12 @@ type TransactionProps = {
     transactionCategory?: CategoryProps[];
 }
 
-type CategoryProps = {
+export type CategoryProps = {
     categoryId?: number;
     categoryName?: string;
 }
 
-type FinanceProps = {
+export type FinanceProps = {
     financeId: number;
     financeBudget: number;
     financeMonthlyBudget: number;

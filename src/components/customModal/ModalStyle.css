@@ -9,6 +9,12 @@
     padding: 10px;
 }
 
+.is-modal-text-pointer {
+    font-weight: 700;
+    color: var(--color-pallete-white);
+    cursor: pointer;
+}
+
 .is-input-field {
     color: white;
     width: 100%;
@@ -78,9 +84,14 @@
 }
 
 .is-numeral-format {
+    min-width: 80%;
     background: transparent;
-    border-bottom: 2px solid var(--color-pallete-white);
     color: var(--color-pallete-white);
+    padding-block: 0;
+    padding-inline: 0;
+    margin: 10px;
+    border-style: none;
+    border-bottom: 2px solid var(--color-pallete-white);
 }
 
 .is-transaction-date {

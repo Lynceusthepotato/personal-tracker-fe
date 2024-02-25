@@ -3,6 +3,20 @@
   --color-pallete-orange: rgb(236, 164, 0);
   --color-pallete-lightGray: rgb(225, 225, 225);
   --color-pallete-white: rgb(240, 240, 240);
+  --color-pallete-medium: rgb(215, 185, 18);
+  --color-pallete-bad: rgb(190, 16, 16);
+}
+
+.is-warn-good {
+  background-color: var(--color-pallete-blue);
+}
+
+.is-warn-medium {
+  background-color: var(--color-pallete-medium);
+}
+
+.is-warn-bad {
+  background-color: var(--color-pallete-bad);
 }
 
 html, body {
@@ -153,10 +167,10 @@ p {
 }
 
 .is-finance-content {
-  display: grid;
-  grid-template-rows: 0.3fr 0.5fr 0.2fr;
   margin: 15px;
-  align-content: space-between;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .is-finance-information-container {

@@ -5,7 +5,7 @@ import { useSignIn, useSignOut } from 'react-auth-kit';
 import CustomButton from '../CustomButton';
 import { useNavigate } from 'react-router-dom';
 import { login, register, createFinance, updateFinance, createTransaction, updateTransaction, getAllTransactionCategory } from '../../api/api';
-import { useUserData } from '../../contexts/UserDataContext';
+import { TransactionProps, useUserData } from '../../contexts/UserDataContext';
 import { NumericFormat } from 'react-number-format';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
@@ -25,6 +25,7 @@ type ModalProps = {
     type?: number;
     children?: React.ReactNode;
     setUsername?: React.Dispatch<React.SetStateAction<string>>;
+    transaction?: TransactionProps;
 }
 
 const defaultModalOverlayStyle: React.CSSProperties = {
@@ -40,7 +41,7 @@ const defaultModalOverlayStyle: React.CSSProperties = {
     alignItems: 'center',
 }
 
-export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onClose, handleMultipleModal, functionType, type = 0, children, setUsername} : ModalProps) {
+export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onClose, handleMultipleModal, functionType, type = 0, children, setUsername, transaction} : ModalProps) {
     const customModalOverlayStyle = {...defaultModalOverlayStyle, ...modalOverlayStyle};
     const navigate = useNavigate();
 
@@ -157,7 +158,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
     }
 
     const handleFinanceSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+        // e.preventDefault();
         try {
             switch (functionType) {
                 case 0:
@@ -181,7 +182,19 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
             if (typeof (createTransaction) !== 'undefined') {
                 const response = await createTransaction(transactionData);
                 if (response.data) {
-                    console.log(response.data);
+                    setUserData(prevUserData => {
+                        if (prevUserData?.finance) {
+                            const updatedFinance = {
+                                ...prevUserData.finance,
+                                transaction: [...(prevUserData.finance.transaction ?? []), response.data.transaction]
+                            };
+                            return {
+                                ...prevUserData,
+                                finance: updatedFinance,
+                            };
+                        }
+                        return prevUserData;
+                    });
                 } else {
                     console.log(response);
                 }
@@ -198,6 +211,19 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                 const response = await updateTransaction(transactionData);
                 if (response.data) {
                     console.log(response.data);
+                    // setUserData(prevUserData => {
+                    //     if (prevUserData?.finance) {
+                    //         const updatedFinance = {
+                    //             ...prevUserData.finance,
+                    //             transaction: response.data
+                    //         };
+                    //         return {
+                    //             ...prevUserData,
+                    //             finance: updatedFinance,
+                    //         };
+                    //     }
+                    //     return prevUserData;
+                    // });
                 } else {
                     console.log(response);
                 }
@@ -215,6 +241,9 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                     await handleCreateTransaction(e);
                     break;
                 case 1:
+                    if (transaction?.transactionId) {
+                        setTransactionData({...transactionData, transaction_id: transaction.transactionId})
+                    }
                     await handleUpdateTransaction(e);
                     break;
                 default:
@@ -224,10 +253,18 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
             console.log(err);
         }
     }
-    
-    const handleCurrencyInput = (input: HTMLInputElement) => {
-        input.value = new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'}).format(parseFloat(input.value));
-    }
+    // how to implement this when update?
+    // if (functionType === 1 && transaction) {
+    //     setTransactionData(
+    //         {   transaction_id: transaction?.transactionId ?? transactionData.transaction_id,
+    //             transaction_numeral: transaction?.transactionNumeral ?? transactionData.transaction_numeral, 
+    //             transaction_name: transaction?.transactionName ?? transactionData.transaction_name, 
+    //             transaction_description: transaction?.transactionDescription ?? transactionData.transaction_description, 
+    //             transaction_date: dayjs(transaction?.transactionDate) ?? transactionData.transaction_date, 
+    //             category_id: transactionData.category_id
+    //         }
+    //     )
+    // }
 
     const customModalContent = () => {
         switch (type) {
@@ -240,7 +277,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                             <input type="text" className="is-input-field" placeholder= "Password" name="password" value={loginData.password} onChange={(e) => setLoginData({...loginData, password: e.target.value})} />
                             <input type="submit" className="is-submit-btn" id="login" value= "Login"/>  
                         </form>
-                        <div className='is-form-question'> Don`t have an account yet? {handleMultipleModal && <p onClick={() => handleMultipleModal(2)} style={{fontWeight:'700', color:'white'}}> Register </p> }</div>
+                        <div className='is-form-question'> Don`t have an account yet? {handleMultipleModal && <p onClick={() => handleMultipleModal(2)} className="is-modal-text-pointer"> Register </p> }</div>
                     </div>
                 )
             case 2: // Register form
@@ -253,7 +290,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                             <input type="text" className="is-input-field" placeholder= "Password" name="password" value={registerData.password} onChange={(e) => setRegisterData({...registerData, password: e.target.value})} />
                             <input type="submit" className="is-submit-btn" id="register" value= "Register"/>
                         </form>
-                        <div className='is-form-question'> Already have an account? {handleMultipleModal && <p onClick={() => handleMultipleModal(1)} style={{fontWeight:'700', color:'white'}}> Login </p> }</div>
+                        <div className='is-form-question'> Already have an account? {handleMultipleModal && <p onClick={() => handleMultipleModal(1)} className="is-modal-text-pointer"> Login </p> }</div>
                     </div>
                 )
             case 3: // Log out
@@ -271,12 +308,31 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                             {functionType === 1 && 
                             <div className='is-finance-budget'>
                                 <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)', fontWeight:'300'}}> Current Budget: </Header>
-                                <input type="number" onInput={(e) => handleCurrencyInput} className="is-input-field" placeholder= "Current Finance Budget" name="finance_budget" value={financeData.finance_budget} onChange={(e) => setFinanceData({...financeData, finance_budget: Number(e.target.value)})} />
+                                <NumericFormat 
+                                className='is-numeral-format'
+                                value={userData?.finance?.financeBudget}
+                                placeholder='enter number'
+                                allowLeadingZeros={false}
+                                thousandSeparator='.'
+                                decimalSeparator=','
+                                prefix='IDR '
+                                onValueChange={(e) => e.floatValue && e.floatValue > 0 ? setFinanceData({...financeData, finance_budget: e.floatValue}) : undefined}
+                                readOnly
+                                />
                             </div>
                             }
                             <div className='is-finance-budget'>
                                 <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)', fontWeight:'300'}}> Monthly Budget: </Header>
-                                <input type="number" onInput={(e) => handleCurrencyInput} className="is-input-field" placeholder= "Monthly Budget" name="monthlyBudget" value={financeData.finance_monthly_budget} onChange={(e) => setFinanceData({...financeData, finance_monthly_budget: Number(e.target.value)})} />
+                                <NumericFormat 
+                                className='is-numeral-format'
+                                value={financeData.finance_monthly_budget}
+                                placeholder='enter number'
+                                allowLeadingZeros={false}
+                                thousandSeparator='.'
+                                decimalSeparator=','
+                                prefix='IDR '
+                                onValueChange={(e) => e.floatValue && e.floatValue > 0 ? setFinanceData({...financeData, finance_monthly_budget: e.floatValue}) : undefined}
+                                />
                             </div>
                             <div className='is-finance-warn'>
                                 <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)'}}> Warn me ?</Header>
@@ -286,7 +342,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                         </form>
                     </div>
                 )
-            case 5:
+            case 5: // Create transaction form
                 return (
                     <div className='is-form-box'>
                         <Header style={{color:'white', paddingBottom:'20px'}}> Finance Tracker </Header>
@@ -300,14 +356,13 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                                 <NumericFormat 
                                 className='is-numeral-format'
                                 value={transactionData.transaction_numeral}
-                                style={{width:'100%'}}
                                 placeholder='enter number'
                                 allowLeadingZeros={false}
                                 thousandSeparator='.'
                                 decimalSeparator=','
                                 prefix='IDR '
                                 onValueChange={(e) => e.floatValue && e.floatValue > 0 ? setTransactionData({...transactionData, transaction_numeral: e.floatValue}) : undefined}
-                                />;
+                                />
                             </div>
                             <div className='is-transactional-type is-transaction-num'>
                                 <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)'}}> Transaction Type </Header>

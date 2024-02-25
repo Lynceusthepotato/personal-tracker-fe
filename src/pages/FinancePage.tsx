@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import { FaPlus, FaTrashCan, FaRotateRight } from "react-icons/fa6";
 import { deleteTransaction, getAllFinance, getAllTransactionCategory } from "../api/api";
-import { useUserData } from "../contexts/UserDataContext";
+import { FinanceProps, TransactionProps, useUserData } from "../contexts/UserDataContext";
 import CustomTransactionCard from "../components/CustomTransactionCard";
 import dayjs from 'dayjs';
 import CustomButton from "../components/CustomButton";
 
 
 type FinancePage = {
-    showModal: (visible: boolean, type: number, functionType: number) => void;
+    showModal: (visible: boolean, type: number, functionType?: number, transaction?: TransactionProps) => void;
 }
 
 const FinancePage = ({showModal}: FinancePage) => {
@@ -19,18 +19,34 @@ const FinancePage = ({showModal}: FinancePage) => {
     let transactionList = userData?.finance?.transaction || [];
 
     const currentDate = dayjs();
-    let currentMonthTransaction = transactionList?.filter(transaction => dayjs(transaction.transactionDate).isSame(currentDate, 'month')) || [];
-    let olderTransaction = transactionList?.filter(transaction => !dayjs(transaction.transactionDate).isSame(currentDate, 'month')) || [];
+    let currentMonthTransaction = transactionList?.filter(transaction => {
+        return typeof transaction?.transactionDate !== "undefined" && 
+               dayjs(transaction.transactionDate).isSame(currentDate, 'month');
+    }) || [];
+    let olderTransaction = transactionList?.filter(transaction => {
+        return typeof transaction?.transactionDate !== "undefined" && !dayjs(transaction.transactionDate).isSame(currentDate, 'month')}) || [];
 
     // Fetch
     const getFinanceInfo = async () => {
         try {
             const response = await getAllFinance();
             if (response.data) {
-                setUserData(prevUserData => ({
-                    ...prevUserData,
-                    finance: response.data
-                }));
+                setUserData(prevUserData => {
+                    let updatedFinance: FinanceProps;
+                    if (prevUserData?.finance) {
+                        updatedFinance = {
+                            ...prevUserData.finance,
+                            transaction: response.data.transaction,
+                        }
+                    } else {
+                        updatedFinance = response.data;
+                    }
+
+                    return {
+                        ...prevUserData,
+                        finance: updatedFinance,
+                    }
+                })
                 transactionList = userData?.finance?.transaction || [];
                 currentMonthTransaction = transactionList?.filter(transaction => dayjs(transaction.transactionDate).isSame(currentDate, 'month')) || [];
                 olderTransaction = transactionList?.filter(transaction => !dayjs(transaction.transactionDate).isSame(currentDate, 'month')) || [];
@@ -50,7 +66,6 @@ const FinancePage = ({showModal}: FinancePage) => {
                     ...prevUserData,
                     category: response.data
                 }));
-                isMounted.current = false;
             } else {
                 console.log(response);
             }
@@ -65,7 +80,7 @@ const FinancePage = ({showModal}: FinancePage) => {
             getFinanceInfo();
             getAllCategory();
         }
-    }, [userData]); 
+    }, [userData?.finance]); 
     
 
     const handleTransactionFunction = (type:number) => { // 0 Create | 1 Update
@@ -126,7 +141,7 @@ const FinancePage = ({showModal}: FinancePage) => {
                         </div>
                         <div className='is-month-history'>
                             {currentMonthTransaction ? currentMonthTransaction.slice().reverse().map((transaction) => (
-                                <CustomTransactionCard transaction={transaction} onRemoveItem={handleChangeRemoveItem} isRemoveActive={isActiveRemove}/>
+                                <CustomTransactionCard onClick={()=> showModal(true, 5, 1, transaction)} transaction={transaction} onRemoveItem={handleChangeRemoveItem} isRemoveActive={isActiveRemove}/>
                             )) : <p> Gathering Data... </p>}
                         </div>
                     </div>
@@ -136,7 +151,7 @@ const FinancePage = ({showModal}: FinancePage) => {
                                 <Header style={{textAlign:'justify', fontSize:'1rem'}}> Old History </Header>
                                 <div className='is-month-history'>
                                     {olderTransaction.length > 0 ? olderTransaction.slice().reverse().map((transaction) => (
-                                        <CustomTransactionCard transaction={transaction} onRemoveItem={handleChangeRemoveItem} isRemoveActive={isActiveRemove}/>
+                                        <CustomTransactionCard onClick={()=> showModal(true, 5, 1, transaction)} transaction={transaction} onRemoveItem={handleChangeRemoveItem} isRemoveActive={isActiveRemove}/>
                                     )) : <p> You don`t have old data :| </p>}
                                 </div> 
                             </>

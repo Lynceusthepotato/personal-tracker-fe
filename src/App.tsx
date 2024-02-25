@@ -15,13 +15,14 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CustomPrivateRoute from './components/CustomPrivateRoute';
 import Modal from './components/customModal/Modal';
-import UserDataProvider from './contexts/UserDataContext';
+import UserDataProvider, { TransactionProps } from './contexts/UserDataContext';
 
 function App() {
   const [isModalVisible, setIsModalVisilble] = useState(false);
   const [modalType, setModalType] = useState(0);
   const [modalFuncType, setModalFuncType] = useState(0);
   const [username, setUsername] = useState<string | null>(null);
+  const [transaction, setTransaction] = useState<TransactionProps>();
   const isAuthenticated = useIsAuthenticated();
   const authUser = useAuthUser();
 
@@ -29,13 +30,16 @@ function App() {
     setIsModalVisilble(false);
   }
 
-  const handleModal = (visible:boolean, type?: number, funcType?: number) => {
+  const handleModal = (visible:boolean, type?: number, funcType?: number, transaction?: TransactionProps) => {
     setIsModalVisilble(visible);
     if (typeof(type) === 'number') {
       setModalType(type);
     }
     if (typeof(funcType) === 'number') {
       setModalFuncType(funcType);
+    }
+    if (transaction) {
+      setTransaction(transaction);
     }
   }
 
@@ -54,7 +58,7 @@ function App() {
     <UserDataProvider>
       <>
         <Navbar showModal={handleModal} username={username}/>
-        <Modal isOpen={isModalVisible} onClose={closeModal} handleMultipleModal={handleModalChange} type={modalType} modalContentStyle={{width:'400px'}} functionType={modalFuncType}/>
+        <Modal isOpen={isModalVisible} onClose={closeModal} handleMultipleModal={handleModalChange} type={modalType} modalContentStyle={{width:'400px'}} functionType={modalFuncType} transaction={transaction}/>
         <Routes>
           <Route path='/' element={<>
             <FrontPage showModal={handleModal}/>

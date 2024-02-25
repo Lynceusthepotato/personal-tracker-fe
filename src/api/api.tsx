@@ -166,6 +166,5 @@ export const deleteTransaction = async(transaction_id: number) => {
             'content-type': 'application/x-www-form-urlencoded',
         }
     };
-    console.log(transaction_id);
     return api.delete(`${deleteTransactionEndpoint}/${transaction_id}`, config);
 }

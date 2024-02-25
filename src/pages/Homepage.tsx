@@ -88,14 +88,27 @@ const Homepage = ({showModal}: HomepageProps) => {
                                 <FaPencil style={{cursor:'pointer'}} onClick={handleFinanceFunction}/>
                             </div>
                             {userData?.finance ? 
-                            (<Header style={{color:'var(--color-pallete-white)'}}>{userData.finance.financeBudget}</Header>) 
+                            (
+                                <NumericFormat 
+                                className='is-numeral-format'
+                                value={userData.finance.financeBudget}
+                                style={{border:'none'}}
+                                placeholder='enter number'
+                                allowLeadingZeros={false}
+                                thousandSeparator='.'
+                                decimalSeparator=','
+                                prefix='IDR '
+                                readOnly
+                                />
+                            // <Header style={{color:'var(--color-pallete-white)'}}>{userData.finance.financeBudget}</Header>
+                            ) 
                             : 
                             (<Header style={{color:'var(--color-pallete-white)'}}>?</Header>)}
                         </div>
                         <div className="is-finance-transaction-container" style={{margin: '10px'}}>
                             <p> Last 5 Transaction... </p>
                             <div className="is-finance-transaction">
-                                {lastTransaction ? lastTransaction.map(transaction => (
+                                {lastTransaction.length > 0 ? lastTransaction.map(transaction => (
                                     <CustomTransactionCard transaction={transaction}/>
                                 )) : <p> No transaction has been made... </p>}
                             </div>
