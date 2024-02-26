@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './ModalStyle.css'
 import Header from '../Header';
 import { useSignIn, useSignOut } from 'react-auth-kit';
 import CustomButton from '../CustomButton';
 import { useNavigate } from 'react-router-dom';
-import { login, register, createFinance, updateFinance, createTransaction, updateTransaction, getAllTransactionCategory } from '../../api/api';
+import { login, register, createFinance, updateFinance, createTransaction, updateTransaction} from '../../api/api';
 import { TransactionProps, useUserData } from '../../contexts/UserDataContext';
 import { NumericFormat } from 'react-number-format';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -210,20 +210,6 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
             if (typeof (updateTransaction) !== 'undefined') {
                 const response = await updateTransaction(transactionData);
                 if (response.data) {
-                    console.log(response.data);
-                    // setUserData(prevUserData => {
-                    //     if (prevUserData?.finance) {
-                    //         const updatedFinance = {
-                    //             ...prevUserData.finance,
-                    //             transaction: response.data
-                    //         };
-                    //         return {
-                    //             ...prevUserData,
-                    //             finance: updatedFinance,
-                    //         };
-                    //     }
-                    //     return prevUserData;
-                    // });
                 } else {
                     console.log(response);
                 }
@@ -241,9 +227,6 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                     await handleCreateTransaction(e);
                     break;
                 case 1:
-                    if (transaction?.transactionId) {
-                        setTransactionData({...transactionData, transaction_id: transaction.transactionId})
-                    }
                     await handleUpdateTransaction(e);
                     break;
                 default:
@@ -253,18 +236,22 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
             console.log(err);
         }
     }
-    // how to implement this when update?
-    // if (functionType === 1 && transaction) {
-    //     setTransactionData(
-    //         {   transaction_id: transaction?.transactionId ?? transactionData.transaction_id,
-    //             transaction_numeral: transaction?.transactionNumeral ?? transactionData.transaction_numeral, 
-    //             transaction_name: transaction?.transactionName ?? transactionData.transaction_name, 
-    //             transaction_description: transaction?.transactionDescription ?? transactionData.transaction_description, 
-    //             transaction_date: dayjs(transaction?.transactionDate) ?? transactionData.transaction_date, 
-    //             category_id: transactionData.category_id
-    //         }
-    //     )
-    // }
+
+    // Set default value for Update
+    useEffect(() => {
+        // Transaction update
+        if (isOpen && functionType === 1 && transaction) {
+            setTransactionData({
+                ...transactionData, 
+                transaction_id: transaction.transactionId,
+                transaction_name: transaction.transactionName,
+                transaction_numeral: transaction.transactionNumeral,
+                transaction_description: transaction.transactionDescription,
+                transaction_date: dayjs(transaction.transactionDate),
+                category_id: transaction.category.categoryId ?? transactionData.category_id,
+            })
+        }
+    }, [isOpen, transaction, functionType])
 
     const customModalContent = () => {
         switch (type) {
@@ -349,7 +336,8 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                         <form id='is-transaction-form' onSubmit={handleTransactionSubmit}>
                             <div className='is-transaction-name is-transaction-num'>
                                 <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)'}}> Transaction Name </Header>
-                                <TextField value={transactionData.transaction_name} onChange={(e) => setTransactionData({...transactionData, transaction_name: e.target.value})} className='is-textfield'/>
+                                <TextField value={transactionData.transaction_name} onChange={(e) => 
+                                    setTransactionData({...transactionData, transaction_name: e.target.value})} className='is-textfield'/>
                             </div>
                             <div className='is-transaction-num'>
                                 <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)'}}> Transaction Numeral </Header>

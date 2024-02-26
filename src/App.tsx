@@ -58,7 +58,14 @@ function App() {
     <UserDataProvider>
       <>
         <Navbar showModal={handleModal} username={username}/>
-        <Modal isOpen={isModalVisible} onClose={closeModal} handleMultipleModal={handleModalChange} type={modalType} modalContentStyle={{width:'400px'}} functionType={modalFuncType} transaction={transaction}/>
+        <Modal 
+          isOpen={isModalVisible} 
+          onClose={closeModal} 
+          handleMultipleModal={handleModalChange} 
+          type={modalType} modalContentStyle={{width:'400px'}} 
+          functionType={modalFuncType} 
+          transaction={transaction}
+        />
         <Routes>
           <Route path='/' element={<>
             <FrontPage showModal={handleModal}/>

@@ -8,11 +8,11 @@ import dayjs from 'dayjs';
 import CustomButton from "../components/CustomButton";
 
 
-type FinancePage = {
+type FinancePageProps = {
     showModal: (visible: boolean, type: number, functionType?: number, transaction?: TransactionProps) => void;
 }
 
-const FinancePage = ({showModal}: FinancePage) => {
+const FinancePage = ({showModal}: FinancePageProps) => {
     const { userData, setUserData } = useUserData();
     const [oldHistory, setOldHistory] = useState(false);
     const [isActiveRemove, setIsActiveRemove] = useState(false);

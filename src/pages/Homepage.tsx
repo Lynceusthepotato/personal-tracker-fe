@@ -6,7 +6,6 @@ import { FaPencil } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "../contexts/UserDataContext";
 import { NumericFormat } from "react-number-format";
-import dayjs from "dayjs";
 import CustomTransactionCard from "../components/CustomTransactionCard";
 
 type HomepageProps = {

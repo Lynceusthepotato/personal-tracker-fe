@@ -1,12 +1,12 @@
 import { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from "react"
 
 export type TransactionProps = {
-    transactionId?: number;
+    transactionId: number;
     transactionNumeral: number;
     transactionName: string;
     transactionDescription: string;
     transactionDate: Date;
-    transactionCategory?: CategoryProps[];
+    category: CategoryProps;
 }
 
 export type CategoryProps = {
