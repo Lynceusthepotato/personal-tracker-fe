@@ -294,7 +294,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                         <form id='is-finance-form' onSubmit={handleFinanceSubmit}>
                             {functionType === 1 && 
                             <div className='is-finance-budget'>
-                                <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)', fontWeight:'300'}}> Current Budget: </Header>
+                                <Header style={{fontSize: '0.8rem', color:'var(--color-palette-white)', fontWeight:'300'}}> Current Budget: </Header>
                                 <NumericFormat 
                                 className='is-numeral-format'
                                 value={userData?.finance?.financeBudget}
@@ -309,7 +309,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                             </div>
                             }
                             <div className='is-finance-budget'>
-                                <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)', fontWeight:'300'}}> Monthly Budget: </Header>
+                                <Header style={{fontSize: '0.8rem', color:'var(--color-palette-white)', fontWeight:'300'}}> Monthly Budget: </Header>
                                 <NumericFormat 
                                 className='is-numeral-format'
                                 value={financeData.finance_monthly_budget}
@@ -322,7 +322,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                                 />
                             </div>
                             <div className='is-finance-warn'>
-                                <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)'}}> Warn me ?</Header>
+                                <Header style={{fontSize: '0.8rem', color:'var(--color-palette-white)'}}> Warn me ?</Header>
                                 <input type="checkbox" className="is-input-field" placeholder= "Warn me?" name="do_warn" checked={financeData.do_warn} onChange={(e) => setFinanceData({...financeData, do_warn: Boolean(e.target.checked)})} />
                             </div>
                             <input type="submit" className="is-submit-btn" id="finance" value= {functionType === 0 ? "Create" : functionType === 1 ? "Update" : ""}/>
@@ -335,12 +335,12 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                         <Header style={{color:'white', paddingBottom:'20px'}}> Finance Tracker </Header>
                         <form id='is-transaction-form' onSubmit={handleTransactionSubmit}>
                             <div className='is-transaction-name is-transaction-num'>
-                                <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)'}}> Transaction Name </Header>
+                                <Header style={{fontSize: '0.8rem', color:'var(--color-palette-white)'}}> Transaction Name </Header>
                                 <TextField value={transactionData.transaction_name} onChange={(e) => 
                                     setTransactionData({...transactionData, transaction_name: e.target.value})} className='is-textfield'/>
                             </div>
                             <div className='is-transaction-num'>
-                                <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)'}}> Transaction Numeral </Header>
+                                <Header style={{fontSize: '0.8rem', color:'var(--color-palette-white)'}}> Transaction Numeral </Header>
                                 <NumericFormat 
                                 className='is-numeral-format'
                                 value={transactionData.transaction_numeral}
@@ -353,7 +353,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                                 />
                             </div>
                             <div className='is-transactional-type is-transaction-num'>
-                                <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)'}}> Transaction Type </Header>
+                                <Header style={{fontSize: '0.8rem', color:'var(--color-palette-white)'}}> Transaction Type </Header>
                                 <Select
                                     value={transactionData.category_id}
                                     onChange={(e) => setTransactionData({...transactionData, category_id: Number(e.target.value)})}
@@ -366,15 +366,15 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                                 </Select>
                             </div>
                             <div className='is-transaction-desc'>
-                                <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)', textAlign:'start'}}> Transaction Description </Header>
+                                <Header style={{fontSize: '0.8rem', color:'var(--color-palette-white)', textAlign:'start'}}> Transaction Description </Header>
                                 <TextField placeholder='hehe' value={transactionData.transaction_description} onChange={(e) => setTransactionData({...transactionData, transaction_description: e.target.value})} className='is-textfield'/>
                             </div>
                             <div className='is-transaction-date'>
-                                <Header style={{fontSize: '0.8rem', color:'var(--color-pallete-white)'}}> Transaction Date </Header>
+                                <Header style={{fontSize: '0.8rem', color:'var(--color-palette-white)'}}> Transaction Date </Header>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DateTimePicker value={transactionData.transaction_date} maxDate={dayjs()} onChange={(e) => setTransactionData({...transactionData, transaction_date: dayjs(e?.format('YYYY-MM-DD HH:mm:ss'))})} className='is-datetime'/>
                                 </LocalizationProvider>
-                                <p style={{fontSize: '0.8rem', color:'var(--color-pallete-lightGray)', padding:'10px'}}> *note: date will have default/max of today </p>
+                                <p style={{fontSize: '0.8rem', color:'var(--color-palette-lightGray)', padding:'10px'}}> *note: date will have default/max of today </p>
                             </div>
                             <input type="submit" className="is-submit-btn" id="finance" value= {functionType === 0 ? "Create" : functionType === 1 ? "Update" : ""}/>
                         </form>

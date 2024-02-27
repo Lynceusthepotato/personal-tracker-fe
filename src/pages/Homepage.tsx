@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useUserData } from "../contexts/UserDataContext";
 import { NumericFormat } from "react-number-format";
 import CustomTransactionCard from "../components/CustomTransactionCard";
+import { categoryColorPicker } from "../App";
 
 type HomepageProps = {
     showModal: (visible: boolean, type: number, functionType: number) => void;
@@ -14,7 +15,8 @@ type HomepageProps = {
 
 const Homepage = ({showModal}: HomepageProps) => {
     const { userData, setUserData } = useUserData();
-    const [totalNegative, setTotalNegative] = useState(0);
+    const navigate = useNavigate();
+    const [currentWarnColor, setCurrentWarnColor] = useState<string>('var(--color-palette-blue)');
     let lastTransaction = userData?.finance?.transaction?.slice(-5) || [];
 
     const getFinanceInfo = async () => {
@@ -22,8 +24,14 @@ const Homepage = ({showModal}: HomepageProps) => {
             const response = await getAllFinance();
             if (response.data) {
                 setUserData({finance: response.data});
+                if (response.data.financeBudget >= response.data.financeMonthlyBudget * 70 / 100) {
+                    setCurrentWarnColor('var(--color-palette-blue)');
+                } else if (response.data.financeBudget >= response.data.financeMonthlyBudget * 30 / 100 && response.data.financeBudget < response.data.financeMonthlyBudget * 70 / 100) {
+                    setCurrentWarnColor('var(--color-palette-medium)');
+                } else if (response.data.financeBudget < response.data.financeMonthlyBudget * 30 / 100) {
+                    setCurrentWarnColor('var(--color-palette-bad)');
+                }
                 lastTransaction = userData?.finance?.transaction?.slice(-5) || [];
-                countMoneyEaten();
                 isMounted.current = false;
             } else {
                 console.log(response);
@@ -52,19 +60,9 @@ const Homepage = ({showModal}: HomepageProps) => {
         }
     }
 
-    const navigate = useNavigate();
-
-    const countMoneyEaten = () => {
-        if (userData?.finance?.transaction) {
-            userData.finance.transaction.map(transaction => (
-                setTotalNegative(totalNegative + transaction.transactionNumeral)
-            ))
-        }
-    }
-
     return (
         <div className="is-homepage-container">
-            <Header style={{backgroundColor:'var(--color-pallete-white)'}}> Manage Tracker </Header>
+            <Header style={{backgroundColor:'var(--color-palette-white)'}}> Manage Tracker </Header>
             <div className="is-homepage-cover">
                 <div className="is-tracker-container">
                     <div className="is-tracker-title">
@@ -81,9 +79,9 @@ const Homepage = ({showModal}: HomepageProps) => {
                         <FaPencil style={{cursor:'pointer'}}/>
                     </div>
                     <div className="is-finance-content">
-                        <div className="is-finance-information-container">
+                        <div className="is-finance-information-container" style={{backgroundColor: `${currentWarnColor}`}}>
                             <div className="is-finance-budget-cover">
-                                <Header style={{fontSize:'0.8', fontWeight:'400', color:'var(--color-pallete-white)'}}> Budget </Header>
+                                <Header style={{fontSize:'0.8', fontWeight:'400', color:'var(--color-palette-white)'}}> Budget </Header>
                                 <FaPencil style={{cursor:'pointer'}} onClick={handleFinanceFunction}/>
                             </div>
                             {userData?.finance ? 
@@ -99,16 +97,15 @@ const Homepage = ({showModal}: HomepageProps) => {
                                 prefix='IDR '
                                 readOnly
                                 />
-                            // <Header style={{color:'var(--color-pallete-white)'}}>{userData.finance.financeBudget}</Header>
                             ) 
                             : 
-                            (<Header style={{color:'var(--color-pallete-white)'}}>?</Header>)}
+                            (<Header style={{color:'var(--color-palette-white)'}}>?</Header>)}
                         </div>
                         <div className="is-finance-transaction-container" style={{margin: '10px'}}>
                             <p> Last 5 Transaction... </p>
                             <div className="is-finance-transaction">
                                 {lastTransaction.length > 0 ? lastTransaction.map(transaction => (
-                                    <CustomTransactionCard transaction={transaction}/>
+                                    <CustomTransactionCard transaction={transaction} categoryColor={categoryColorPicker(transaction.category.categoryId)}/>
                                 )) : <p> No transaction has been made... </p>}
                             </div>
                         </div>

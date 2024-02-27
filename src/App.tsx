@@ -17,6 +17,23 @@ import CustomPrivateRoute from './components/CustomPrivateRoute';
 import Modal from './components/customModal/Modal';
 import UserDataProvider, { TransactionProps } from './contexts/UserDataContext';
 
+export const categoryColorPicker = (category_id: number) => {
+  switch (category_id) {
+    case 1: // Else
+      return 'var(--color-palette-category-else)';
+    case 2: // Food n Drinks
+      return 'var(--color-palette-category-fnb)';
+    case 3: // Clothing
+      return 'var(--color-palette-category-clothing)';
+    case 4: // Electronics
+      return 'var(--color-palette-category-electronics)';
+    case 5: // Electricity Bill
+      return 'var(--color-palette-category-eb)';
+    case 6: // Water Bill
+      return 'var(--color-palette-category-wb)';
+  }
+}
+
 function App() {
   const [isModalVisible, setIsModalVisilble] = useState(false);
   const [modalType, setModalType] = useState(0);

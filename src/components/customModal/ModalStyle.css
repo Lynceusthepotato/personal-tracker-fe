@@ -11,7 +11,7 @@
 
 .is-modal-text-pointer {
     font-weight: 700;
-    color: var(--color-pallete-white);
+    color: var(--color-palette-white);
     cursor: pointer;
 }
 
@@ -35,7 +35,7 @@
     cursor: pointer;
     display: block;
     margin: 25px;
-    background: linear-gradient(to right, var(--color-pallete-blue), var(--color-pallete-blue));
+    background: linear-gradient(to right, var(--color-palette-blue), var(--color-palette-blue));
     border: 0;
     outline: none;
     border-radius: 30px;
@@ -72,8 +72,8 @@
 
 .is-transactional-type {
     & .MuiInputBase-root {
-        color: var(--color-pallete-white);
-        border-bottom: 2px solid var(--color-pallete-white);
+        color: var(--color-palette-white);
+        border-bottom: 2px solid var(--color-palette-white);
         width: 100%;
     }
 }
@@ -86,12 +86,12 @@
 .is-numeral-format {
     min-width: 80%;
     background: transparent;
-    color: var(--color-pallete-white);
+    color: var(--color-palette-white);
     padding-block: 0;
     padding-inline: 0;
     margin: 10px;
     border-style: none;
-    border-bottom: 2px solid var(--color-pallete-white);
+    border-bottom: 2px solid var(--color-palette-white);
 }
 
 .is-transaction-date {
@@ -104,18 +104,18 @@
 
 .is-datetime {
     & .MuiInputBase-root {
-        color: var(--color-pallete-white);
-        border-bottom: 2px solid var(--color-pallete-white);
+        color: var(--color-palette-white);
+        border-bottom: 2px solid var(--color-palette-white);
     }
     & .MuiSvgIcon-root {
-        fill: var(--color-pallete-white)
+        fill: var(--color-palette-white)
     }
 }
 
 .is-textfield {
     & .MuiInputBase-root {
-        color: var(--color-pallete-white);
-        border-bottom: 2px solid var(--color-pallete-white);
+        color: var(--color-palette-white);
+        border-bottom: 2px solid var(--color-palette-white);
         font-size: 0.8em;
     }
     &.MuiFormControl-root {

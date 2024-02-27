@@ -10,7 +10,7 @@ export type TransactionProps = {
 }
 
 export type CategoryProps = {
-    categoryId?: number;
+    categoryId: number;
     categoryName?: string;
 }
 

@@ -6,6 +6,7 @@ import { FinanceProps, TransactionProps, useUserData } from "../contexts/UserDat
 import CustomTransactionCard from "../components/CustomTransactionCard";
 import dayjs from 'dayjs';
 import CustomButton from "../components/CustomButton";
+import { categoryColorPicker } from "../App";
 
 
 type FinancePageProps = {
@@ -124,8 +125,8 @@ const FinancePage = ({showModal}: FinancePageProps) => {
 
     return (
         <div className="is-financepage" style={{display:'grid'}}>
-            <Header style={{backgroundColor:'var(--color-pallete-white)'}}> Finance History </Header>
-            <div className="is-finance-history-container" style={{minHeight:'80vh', backgroundColor:'var(--color-pallete-lightGray)'}}>
+            <Header style={{backgroundColor:'var(--color-palette-white)'}}> Finance History </Header>
+            <div className="is-finance-history-container" style={{minHeight:'80vh', backgroundColor:'var(--color-palette-lightGray)'}}>
                 <div className="is-finance-taskbar">
                     <div className="is-finance-taskbar-pattern"/>
                     <FaPlus style={{cursor:"pointer"}} onClick={(e) => handleTransactionFunction(0)}/>
@@ -141,7 +142,13 @@ const FinancePage = ({showModal}: FinancePageProps) => {
                         </div>
                         <div className='is-month-history'>
                             {currentMonthTransaction ? currentMonthTransaction.slice().reverse().map((transaction) => (
-                                <CustomTransactionCard onClick={()=> showModal(true, 5, 1, transaction)} transaction={transaction} onRemoveItem={handleChangeRemoveItem} isRemoveActive={isActiveRemove}/>
+                                <CustomTransactionCard 
+                                onClick={()=> showModal(true, 5, 1, transaction)} 
+                                transaction={transaction} 
+                                onRemoveItem={handleChangeRemoveItem} 
+                                isRemoveActive={isActiveRemove}
+                                categoryColor={categoryColorPicker(transaction.category.categoryId)}
+                                />
                             )) : <p> Gathering Data... </p>}
                         </div>
                     </div>
@@ -151,7 +158,13 @@ const FinancePage = ({showModal}: FinancePageProps) => {
                                 <Header style={{textAlign:'justify', fontSize:'1rem'}}> Old History </Header>
                                 <div className='is-month-history'>
                                     {olderTransaction.length > 0 ? olderTransaction.slice().reverse().map((transaction) => (
-                                        <CustomTransactionCard onClick={()=> showModal(true, 5, 1, transaction)} transaction={transaction} onRemoveItem={handleChangeRemoveItem} isRemoveActive={isActiveRemove}/>
+                                        <CustomTransactionCard 
+                                        onClick={()=> showModal(true, 5, 1, transaction)} 
+                                        transaction={transaction} 
+                                        onRemoveItem={handleChangeRemoveItem} 
+                                        isRemoveActive={isActiveRemove}
+                                        categoryColor={categoryColorPicker(transaction.category.categoryId)}
+                                        />
                                     )) : <p> You don`t have old data :| </p>}
                                 </div> 
                             </>

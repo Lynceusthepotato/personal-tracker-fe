@@ -11,25 +11,11 @@ type TransactionCardProps = {
     onRemoveItem?: (value: number) => void;
     isRemoveActive?: boolean;
     onClick?: () => void;
+    categoryColor?: string;
 }
 
-// type TransactionProps = {
-//     transactionId?: number;
-//     transactionNumeral: number;
-//     transactionName: string;
-//     transactionDescription: string;
-//     transactionDate: Date;
-//     transactionCategory?: CategoryProps[];
-// }
-
-// type CategoryProps = {
-//     categoryId?: number;
-//     categoryName?: string;
-// }
-
-export default function CustomTransactionCard({transaction, type = 0, onRemoveItem, isRemoveActive, onClick}:TransactionCardProps) {
+export default function CustomTransactionCard({transaction, type = 0, onRemoveItem, isRemoveActive, onClick, categoryColor}:TransactionCardProps) {
     const [checked, setChecked] = useState(false);
-
     const handleAddRemoveTrans = (e: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(e.target.checked);
         if (onRemoveItem) {
@@ -48,9 +34,9 @@ export default function CustomTransactionCard({transaction, type = 0, onRemoveIt
     }
 
   return (
-    <div className={`is-transaction-card-container-container${isRemoveActive ? ' active' : ''}`} onClick={handleOnClick}>
+    <div className={`is-transaction-card-container-container${isRemoveActive ? ' active' : ''}`}>
         <Checkbox className={`is-transaction-checkbox${isRemoveActive ? ' active': ''}`} checked={checked} onChange={handleAddRemoveTrans} value={transaction.transactionId}/>
-        <div className="is-transaction-card-container">
+        <div className="is-transaction-card-container" onClick={handleOnClick} style={{backgroundColor: `${categoryColor}`}}>
             <div className="is-transaction-card">
                 <Header style={{fontSize: '.8em', textAlign:'start', width: '100%'}}> {transaction.transactionName} </Header>
                 <NumericFormat
