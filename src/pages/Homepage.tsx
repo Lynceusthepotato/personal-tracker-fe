@@ -13,6 +13,16 @@ type HomepageProps = {
     showModal: (visible: boolean, type: number, functionType: number) => void;
 }
 
+export const getCurrentWarnStage = (currentBudget: number, monthlyBudget: number) => { // 0 = normal | 1 = medium | 2 = bad
+    if (currentBudget >= monthlyBudget * 70 / 100) {
+        return 0;
+    } else if (currentBudget >= monthlyBudget * 30 / 100 && currentBudget < monthlyBudget * 70 / 100) {
+        return 1;
+    } else if (currentBudget < monthlyBudget * 30 / 100) {
+        return 2;
+    }
+}
+
 const Homepage = ({showModal}: HomepageProps) => {
     const { userData, setUserData } = useUserData();
     const navigate = useNavigate();
@@ -24,12 +34,15 @@ const Homepage = ({showModal}: HomepageProps) => {
             const response = await getAllFinance();
             if (response.data) {
                 setUserData({finance: response.data});
-                if (response.data.financeBudget >= response.data.financeMonthlyBudget * 70 / 100) {
-                    setCurrentWarnColor('var(--color-palette-blue)');
-                } else if (response.data.financeBudget >= response.data.financeMonthlyBudget * 30 / 100 && response.data.financeBudget < response.data.financeMonthlyBudget * 70 / 100) {
-                    setCurrentWarnColor('var(--color-palette-medium)');
-                } else if (response.data.financeBudget < response.data.financeMonthlyBudget * 30 / 100) {
-                    setCurrentWarnColor('var(--color-palette-bad)');
+                switch (getCurrentWarnStage(response.data.financeBudget, response.data.financeMonthlyBudget)) {
+                    case 1:
+                        setCurrentWarnColor('var(--color-palette-medium)');
+                        break;
+                    case 2:
+                        setCurrentWarnColor('var(--color-palette-bad)');
+                        break;
+                    default:
+                        setCurrentWarnColor('var(--color-palette-blue)');
                 }
                 lastTransaction = userData?.finance?.transaction?.slice(-5) || [];
                 isMounted.current = false;
@@ -67,7 +80,6 @@ const Homepage = ({showModal}: HomepageProps) => {
                 <div className="is-tracker-container">
                     <div className="is-tracker-title">
                         <Header style={{fontSize: '1.1rem', fontWeight:'500'}}> To-do List</Header>
-                        <FaPencil style={{cursor:'pointer'}}/>
                     </div>
                     <div className="is-todo-content">
 
@@ -76,7 +88,6 @@ const Homepage = ({showModal}: HomepageProps) => {
                 <div className="is-tracker-container">
                     <div className="is-tracker-title">
                         <Header style={{fontSize: '1.1rem', fontWeight:'500'}}> Finance </Header>
-                        <FaPencil style={{cursor:'pointer'}}/>
                     </div>
                     <div className="is-finance-content">
                         <div className="is-finance-information-container" style={{backgroundColor: `${currentWarnColor}`}}>
@@ -114,7 +125,7 @@ const Homepage = ({showModal}: HomepageProps) => {
                 </div>
             </div>
             <div className="is-homepage-filler">
-                <Header> ¯\_(ツ)_/¯ </Header>
+                <Header> ¯\_(T o T)_/¯ </Header>
             </div>
         </div>
     )

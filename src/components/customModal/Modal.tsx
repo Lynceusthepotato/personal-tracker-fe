@@ -312,7 +312,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                                 <Header style={{fontSize: '0.8rem', color:'var(--color-palette-white)', fontWeight:'300'}}> Monthly Budget: </Header>
                                 <NumericFormat 
                                 className='is-numeral-format'
-                                value={financeData.finance_monthly_budget}
+                                value={userData?.finance?.financeMonthlyBudget}
                                 placeholder='enter number'
                                 allowLeadingZeros={false}
                                 thousandSeparator='.'
@@ -325,6 +325,7 @@ export default function Modal({modalOverlayStyle, modalContentStyle, isOpen, onC
                                 <Header style={{fontSize: '0.8rem', color:'var(--color-palette-white)'}}> Warn me ?</Header>
                                 <input type="checkbox" className="is-input-field" placeholder= "Warn me?" name="do_warn" checked={financeData.do_warn} onChange={(e) => setFinanceData({...financeData, do_warn: Boolean(e.target.checked)})} />
                             </div>
+                            <p style={{color:'var(--color-palette-white)', fontSize: '75%', margin: '10px'}}> *Updating monthly budget will change the current budget into the same number* </p>
                             <input type="submit" className="is-submit-btn" id="finance" value= {functionType === 0 ? "Create" : functionType === 1 ? "Update" : ""}/>
                         </form>
                     </div>

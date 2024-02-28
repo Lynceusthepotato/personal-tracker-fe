@@ -7,6 +7,7 @@ import CustomTransactionCard from "../components/CustomTransactionCard";
 import dayjs from 'dayjs';
 import CustomButton from "../components/CustomButton";
 import { categoryColorPicker } from "../App";
+import { getCurrentWarnStage } from "./Homepage";
 
 
 type FinancePageProps = {
@@ -85,7 +86,13 @@ const FinancePage = ({showModal}: FinancePageProps) => {
     
 
     const handleTransactionFunction = (type:number) => { // 0 Create | 1 Update
-        showModal(true, 5, type);
+        if (userData?.finance) {
+            if (getCurrentWarnStage(userData?.finance?.financeBudget, userData?.finance?.financeMonthlyBudget) !== 2) {
+                showModal(true, 5, type);
+            } else {
+                showModal(true, 6, type);
+            }
+        }
     }
 
     const refreshFinance = () => {
